@@ -75,7 +75,7 @@ class LineProgram(object):
     """
     def __init__(self, header, stream, structs,
                  program_start_offset, program_end_offset):
-        """ 
+        """
             header:
                 The header of this line program. Note: LineProgram may modify
                 its header by appending file entries if DW_LNE_define_file
@@ -114,7 +114,7 @@ class LineProgram(object):
         return self._decoded_entries
 
     #------ PRIVATE ------#
-    
+
     def __getitem__(self, name):
         """ Implement dict-like access to header entries
         """
@@ -140,7 +140,7 @@ class LineProgram(object):
         offset = self.program_start_offset
         while offset < self.program_end_offset:
             opcode = struct_parse(
-                self.structs.Dwarf_uint8(''), 
+                self.structs.Dwarf_uint8(''),
                 self.stream,
                 offset)
 
@@ -155,7 +155,7 @@ class LineProgram(object):
                 address_addend = ((adjusted_opcode // self['line_range']) *
                                   self['minimum_instruction_length'])
                 state.address += address_addend
-                line_addend = (self['line_base'] + 
+                line_addend = (self['line_base'] +
                                adjusted_opcode % self['line_range'])
                 state.line += line_addend
                 add_entry_new_state(opcode, [line_addend, address_addend])
@@ -171,7 +171,7 @@ class LineProgram(object):
                     state.end_sequence = True
                     add_entry_new_state(ex_opcode, [], is_extended=True)
                     # reset state
-                    state = LineState(self.header['default_is_stmt']) 
+                    state = LineState(self.header['default_is_stmt'])
                 elif ex_opcode == DW_LNE_set_address:
                     operand = struct_parse(self.structs.Dwarf_target_addr(''),
                                            self.stream)

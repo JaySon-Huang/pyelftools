@@ -124,7 +124,7 @@ class DWARFInfo(object):
         """ Obtain a string from the string table section, given an offset
             relative to the section.
         """
-        return parse_cstring_from_stream(self.debug_str_sec.stream, offset)
+        return parse_cstring_from_stream(self.debug_str_sec.stream, offset).decode('ascii')
 
     def line_program_for_CU(self, CU):
         """ Given a CU object, fetch the line program it points to from the
@@ -261,15 +261,21 @@ class DWARFInfo(object):
             structs.Dwarf_lineprog_header,
             self.debug_line_sec.stream,
             debug_line_offset)
-
         # Calculate the offset to the next line program (see DWARF 6.2.4)
         end_offset = (  debug_line_offset + lineprog_header['unit_length'] +
                         structs.initial_length_field_size())
 
-        return LineProgram(
+        # return LineProgram(
+        #     header=lineprog_header,
+        #     stream=self.debug_line_sec.stream,
+        #     structs=structs,
+        #     program_start_offset=self.debug_line_sec.stream.tell(),
+        #     program_end_offset=end_offset)
+        tmp = LineProgram(
             header=lineprog_header,
             stream=self.debug_line_sec.stream,
             structs=structs,
             program_start_offset=self.debug_line_sec.stream.tell(),
             program_end_offset=end_offset)
-
+        # from IPython import embed;embed()
+        return tmp

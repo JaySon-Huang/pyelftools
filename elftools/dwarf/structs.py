@@ -214,7 +214,7 @@ class DWARFStructs(object):
         # A file entry is terminated by a NULL byte, so we don't want to parse
         # past it. Therefore an If is used.
         self.Dwarf_lineprog_file_entry = Struct('file_entry',
-            CString('name'),
+            CString('name', encoding='ascii'),  # return name as ascii-decoded string
             If(lambda ctx: len(ctx.name) != 0,
                 Embed(Struct('',
                     self.Dwarf_uleb128('dir_index'),
@@ -247,7 +247,7 @@ class DWARFStructs(object):
                 self.Dwarf_initial_length('length'),
                 self.Dwarf_offset('CIE_id'),
                 self.Dwarf_uint8('version'),
-                CString('augmentation'),
+                CString('augmentation', encoding='ascii'),
                 self.Dwarf_uint8('address_size'),
                 self.Dwarf_uint8('segment_size'),
                 self.Dwarf_uleb128('code_alignment_factor'),
@@ -258,7 +258,7 @@ class DWARFStructs(object):
                 self.Dwarf_initial_length('length'),
                 self.Dwarf_offset('CIE_id'),
                 self.Dwarf_uint8('version'),
-                CString('augmentation'),
+                CString('augmentation', encoding='ascii'),
                 self.Dwarf_uleb128('code_alignment_factor'),
                 self.Dwarf_sleb128('data_alignment_factor'),
                 self.Dwarf_uleb128('return_address_register'))

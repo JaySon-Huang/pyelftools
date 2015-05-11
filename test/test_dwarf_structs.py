@@ -38,8 +38,8 @@ class TestDWARFStructs(unittest.TestCase):
         self.assertEqual(c.standard_opcode_lengths, [0, 1, 4, 8, 12])
         self.assertEqual(c.include_directory, [b'ab', b'p'])
         self.assertEqual(len(c.file_entry), 2)
-        self.assertEqual(c.file_entry[0].name, b'ar')
-        self.assertEqual(c.file_entry[1].name, b'EPQ')
+        self.assertEqual(c.file_entry[0].name, 'ar')
+        self.assertEqual(c.file_entry[1].name, 'EPQ')
         self.assertEqual(c.file_entry[1].dir_index, 0x12 * 128 + 6)
 
 

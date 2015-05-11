@@ -34,8 +34,8 @@ def process_file(filename, address):
         funcname = decode_funcname(dwarfinfo, address)
         file, line = decode_file_line(dwarfinfo, address)
 
-        print('Function:', bytes2str(funcname))
-        print('File:', bytes2str(file))
+        print('Function:', funcname)
+        print('File:', file)
         print('Line:', line)
 
 
