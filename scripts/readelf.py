@@ -873,7 +873,7 @@ class ReadElf(object):
                     # Unknown attribute values are passed-through as integers
                     if isinstance(name, int):
                         name = 'Unknown AT value: %x' % name
-                    self._emitline('    <%2x>   %-18s: %s' % (
+                    self._emitline('    <%x>   %-18s: %s' % (
                         attr.offset,
                         name,
                         describe_attr_value(
@@ -929,11 +929,19 @@ class ReadElf(object):
                     # readelf doesn't print the state after end_sequence
                     # instructions. I think it's a bug but to be compatible
                     # I don't print them too.
-                    self._emitline('%-35s  %11d  %18s' % (
-                        bytes2str(lineprogram['file_entry'][state.file - 1].name),
-                        state.line,
-                        '0' if state.address == 0 else
-                               self._format_hex(state.address)))
+                    if lineprogram['version'] < 4:
+                        self._emitline('%-35s  %11d  %18s' % (
+                            bytes2str(lineprogram['file_entry'][state.file - 1].name),
+                            state.line,
+                            '0' if state.address == 0 else
+                                self._format_hex(state.address)))
+                    else:
+                        self._emitline('%-35s  %11d  %18s[%d]' % (
+                            bytes2str(lineprogram['file_entry'][state.file - 1].name),
+                            state.line,
+                            '0' if state.address == 0 else
+                                self._format_hex(state.address),
+                            state.op_index))
                 if entry.command == DW_LNS_copy:
                     # Another readelf oddity...
                     self._emitline()
@@ -1049,7 +1057,7 @@ class ReadElf(object):
     def _emitline(self, s=''):
         """ Emit an object to output, followed by a newline
         """
-        self.output.write(str(s) + '\n')
+        self.output.write(str(s).rstrip() + '\n')
 
 
 SCRIPT_DESCRIPTION = 'Display information about the contents of ELF format files'
